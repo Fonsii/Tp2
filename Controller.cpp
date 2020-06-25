@@ -62,8 +62,6 @@ std::string stringTrimmed(std::string str, int indexStart) {
 	return str;
 }
 
-
-
 auto getList(std::string command) {
 	std::string commandTrimmed = command.substr(1, command.size() - 2);
 	std::string head;
@@ -198,7 +196,7 @@ auto interpretCommand(std::string command) {
 
 void makeQuery() {
 	std::string command;
-	std::cout << "Ingrese el comando para ingresar una lista. Ejemplo: col(list1)" << std::endl;
+	std::cout << "Ingrese el comando para ingresar una lista. Ejemplos: col(list1) o cab(col(list1))" << std::endl;
 	std::cin.ignore();
 	std::getline(std::cin, command);
 	std::cout << "La consulta introducida fue: " << command << std::endl;
@@ -207,20 +205,34 @@ void makeQuery() {
 
 void addList() {
 	std::string command;
-	std::cout << "Ingrese el comando para ingresar una lista. Ejemplo: lista1 ((3 7) ((5 6) (8 9)))" << std::endl;
+	std::cout << "Ingrese el comando para ingresar una lista." << std::endl;
+	std::cout << "Ejemplos: " << std::endl;
+	std::cout << "list1 ((3 7) ((5 6) (8 9)))" << std::endl;
+	std::cout << "list2 (3 4)" << std::endl;
+	std::cout << "list2 (cab(list1) 4)" << std::endl;
 	std::cin.ignore();
-	std::getline(std::cin, command);	
-	std::cout << "El comando introducido fue: " << command << std::endl;
-	//command = "lista1 ((3 7) ((5 6) (8 9)))";
-	//command = "lista1 ((3 7) ((5 6) (8 9)))";
-	//command = "lista1 (3 col(lista2))"
+	std::getline(std::cin, command);		
 	
-	size_t pos = command.find(" ");
-	std::string listName = command.substr(0, pos);
-	std::string listCommand = command.substr(++pos, command.size());
+	if (command != "") {
+		std::cout << "El comando introducido fue: " << command << std::endl;
+		size_t pos = command.find(" ");
+		std::string listName = command.substr(0, pos);
+		std::string listCommand = command.substr(++pos, command.size());
 
-	// check if the command is concatenated.
-	listRegistry.insert({listName, getList(interpretCommand(listCommand))});
+		if (listCommand[0] == '(' && listCommand[listCommand.size() - 1] == ')') {
+			// check if the command is concatenated.
+			listRegistry.insert({ listName, getList(interpretCommand(listCommand)) });
+		}
+		else {
+			std::cout << "Los comandos se espera que empiecen con '('" << std::endl;
+			std::cout << "Y terminen con ')'" << std::endl;
+		}
+	}
+	else {
+		std::cout << "No se ingresó ningún comando." << std::endl;
+	}
+
+	
 }
 
 void printLists() {
@@ -250,9 +262,9 @@ void Controller::start()
 	SetConsoleOutputCP(1252);
 
 	//preload some lists for testing.
-	listRegistry.insert({"list0", getList("(4 (7 9))") });
-	listRegistry.insert({"list1", getList("((3 0) (4 (7 9)))")});
-	listRegistry.insert({"list2", getList("((3 7) ((5 6) (8 9)))") });
+	//listRegistry.insert({"list0", getList("(4 (7 9))") });
+	//listRegistry.insert({"list1", getList("((3 0) (4 (7 9)))")});
+	//listRegistry.insert({"list2", getList("((3 7) ((5 6) (8 9)))") });
 
 	// end preload.
 	// some commandNestedTests.
