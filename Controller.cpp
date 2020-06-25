@@ -16,6 +16,11 @@ typedef List<std::string> list_ptr;
 
 std::map <std::string, list_ptr> listRegistry;
 
+/**
+*@brief metodo utilizado para saber si es un dato atomico.
+*@param command de tipo std::string que representa el comando.
+*@return true si es atomico, false si no lo es.
+*/
 bool isAtomic(std::string command) {
 	bool result = true;
 	if (command.size() > 2) {
@@ -26,6 +31,11 @@ bool isAtomic(std::string command) {
 	return result;
 }
 
+/**
+*@brief metodo utilizado para saber si es un valor de una lista.
+*@param command de tipo std::string que representa el comando.
+*@return true si es un solo valor, false si no lo es.
+*/
 bool isSingleValue(std::string command) {
 	bool result = true;
 	if (command.size() >= 1) {
@@ -36,6 +46,11 @@ bool isSingleValue(std::string command) {
 	return result;
 }
 
+/*
+*@brief metodo que borra los parentesis y espacios para guardar los datos en una lista.
+*@param str tipo std::string con la string ingresada por el usuario.
+*@return std::string de valores.
+*/
 std::string cleanString(std::string str) {
 	str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
 	str.erase(std::remove(str.begin(), str.end(), '('), str.end());
@@ -43,6 +58,11 @@ std::string cleanString(std::string str) {
 	return str;
 }
 
+/*
+*@brief metodo que detecta si la cola es nula para imprimir solo la cabeza.
+*@param command de tipo std::string que representa el comando.
+*@return la cabeza sin el espacio de la cola. 
+*/
 std::string isOne(std::string command) {
 	for (int i = 0; i < command.size(); i++) {
 		if (command[i] == ' ') {
@@ -55,6 +75,11 @@ std::string isOne(std::string command) {
 	return command;
 }
 
+/*
+*@brief metodo que recorta una string.
+*@param str tipo std::string que se va a recortar, indexStart tipo int para saber a partir de que posicion la recorta.
+*@return std::string recortada.
+*/
 std::string stringTrimmed(std::string str, int indexStart) {
 	if (!isAtomic(str)) {
 		str = str.substr(indexStart, str.size() - 2);
@@ -62,6 +87,11 @@ std::string stringTrimmed(std::string str, int indexStart) {
 	return str;
 }
 
+/*
+*@brief metodo que imprime lista.
+*@param command de tipo std::string que representa el comando.
+*@return objeto lista.
+*/
 auto getList(std::string command) {
 	std::string commandTrimmed = command.substr(1, command.size() - 2);
 	std::string head;
@@ -110,6 +140,11 @@ auto getList(std::string command) {
 	return list(head, tail);
 }
 
+/*
+*@brief metodo que interpreta un comando.
+*@param command de tipo std::string que representa el comando.
+*@return string de ejecucion del comando.
+*/
 std::string getCommandOrder(std::string command) {
 	std::string data;
 	bool statementFound = false;
@@ -148,6 +183,11 @@ std::string getCommandOrder(std::string command) {
 	return isOne(data);
 }
 
+/**
+*@brief metodo para imprimir lista con parentesis.
+*@param command de tipo std::string que representa el comando.
+*@return lista en un string.
+*/
 auto interpretCommand(std::string command) {
 	std::string commandTrimmed = command.substr(1, command.size() - 2);
 	std::string head;
@@ -194,6 +234,9 @@ auto interpretCommand(std::string command) {
 	return listData;
 }
 
+/**
+*@brief metodo que realiza consultas a la lista.
+*/
 void makeQuery() {
 	std::string command;
 	std::cout << "Ingrese el comando para ingresar una lista. Ejemplos: col(list1) o cab(col(list1))" << std::endl;
@@ -203,6 +246,9 @@ void makeQuery() {
 	std::cout << getCommandOrder(command) << std::endl;
 }
 
+/**
+*@brief metodo que agrega una lista.
+*/
 void addList() {
 	std::string command;
 	std::cout << "Ingrese el comando para ingresar una lista." << std::endl;
@@ -235,6 +281,9 @@ void addList() {
 	
 }
 
+/**
+*@brief metodo que imprime las listas. 
+*/
 void printLists() {
 	std::cout << std::endl;
 	for (auto it = listRegistry.begin(); it != listRegistry.end(); ++it) {
@@ -243,7 +292,9 @@ void printLists() {
 	std::cout << std::endl;
 }
 
-// console cleaning taken from: https://stackoverflow.com/questions/6486289/how-can-i-clear-console
+/**
+*@brief metodo para limpiar consola dependiendo del sistema operativo, tomado de: https://stackoverflow.com/questions/6486289/how-can-i-clear-console
+*/
 void clear()
 {
 #if defined _WIN32
@@ -255,6 +306,9 @@ void clear()
 #endif
 }
 
+/**
+*@brief metodo para ejecutar el programa.
+*/
 void Controller::start()
 {
 	setlocale(LC_ALL, "spanish");
